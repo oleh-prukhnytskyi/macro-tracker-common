@@ -1,19 +1,13 @@
 package com.olehprukhnytskyi.exception;
 
 import com.olehprukhnytskyi.exception.error.BaseErrorCode;
-import lombok.Getter;
 
-@Getter
-public class BadRequestException extends RuntimeException {
-	private final BaseErrorCode errorCode;
-
-	public BadRequestException(BaseErrorCode errorCode, String detail) {
-		super(detail);
-		this.errorCode = errorCode;
+public class BadRequestException extends BaseException {
+	protected BadRequestException(BaseErrorCode errorCode, String message) {
+		super(errorCode, message);
 	}
 
-	public BadRequestException(BaseErrorCode errorCode, String detail, Throwable cause) {
-		super(detail, cause);
-		this.errorCode = errorCode;
+	protected BadRequestException(BaseErrorCode errorCode, String message, Throwable cause) {
+		super(errorCode, message, cause);
 	}
 }

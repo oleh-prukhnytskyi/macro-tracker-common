@@ -1,19 +1,13 @@
 package com.olehprukhnytskyi.exception;
 
 import com.olehprukhnytskyi.exception.error.BaseErrorCode;
-import lombok.Getter;
 
-@Getter
-public class ExternalServiceException extends RuntimeException {
-	private final BaseErrorCode errorCode;
-
-	public ExternalServiceException(BaseErrorCode errorCode, String detail) {
-		super(detail);
-		this.errorCode = errorCode;
+public class ExternalServiceException extends BaseException {
+	protected ExternalServiceException(BaseErrorCode errorCode, String message) {
+		super(errorCode, message);
 	}
 
-	public ExternalServiceException(BaseErrorCode errorCode, String detail, Throwable cause) {
-		super(detail, cause);
-		this.errorCode = errorCode;
+	protected ExternalServiceException(BaseErrorCode errorCode, String message, Throwable cause) {
+		super(errorCode, message, cause);
 	}
 }

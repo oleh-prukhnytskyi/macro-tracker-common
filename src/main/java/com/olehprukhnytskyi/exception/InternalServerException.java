@@ -1,19 +1,13 @@
 package com.olehprukhnytskyi.exception;
 
 import com.olehprukhnytskyi.exception.error.BaseErrorCode;
-import lombok.Getter;
 
-@Getter
-public class InternalServerException extends RuntimeException {
-    private final BaseErrorCode errorCode;
-
-    public InternalServerException(BaseErrorCode errorCode, String detail) {
-        super(detail);
-        this.errorCode = errorCode;
+public class InternalServerException extends BaseException {
+    protected InternalServerException(BaseErrorCode errorCode, String message) {
+        super(errorCode, message);
     }
 
-    public InternalServerException(BaseErrorCode errorCode, String detail, Throwable cause) {
-        super(detail, cause);
-        this.errorCode = errorCode;
+    protected InternalServerException(BaseErrorCode errorCode, String message, Throwable cause) {
+        super(errorCode, message, cause);
     }
 }

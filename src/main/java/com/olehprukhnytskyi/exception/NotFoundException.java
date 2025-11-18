@@ -1,19 +1,13 @@
 package com.olehprukhnytskyi.exception;
 
 import com.olehprukhnytskyi.exception.error.BaseErrorCode;
-import lombok.Getter;
 
-@Getter
-public class NotFoundException extends RuntimeException {
-    private final BaseErrorCode errorCode;
-
-    public NotFoundException(BaseErrorCode errorCode, String detail) {
-        super(detail);
-        this.errorCode = errorCode;
+public class NotFoundException extends BaseException {
+    protected NotFoundException(BaseErrorCode errorCode, String message) {
+        super(errorCode, message);
     }
 
-    public NotFoundException(BaseErrorCode errorCode, String detail, Throwable cause) {
-        super(detail, cause);
-        this.errorCode = errorCode;
+    protected NotFoundException(BaseErrorCode errorCode, String message, Throwable cause) {
+        super(errorCode, message, cause);
     }
 }

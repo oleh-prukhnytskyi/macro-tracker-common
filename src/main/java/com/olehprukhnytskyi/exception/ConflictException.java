@@ -1,19 +1,13 @@
 package com.olehprukhnytskyi.exception;
 
 import com.olehprukhnytskyi.exception.error.BaseErrorCode;
-import lombok.Getter;
 
-@Getter
-public class ConflictException extends RuntimeException {
-    private final BaseErrorCode errorCode;
-
-    public ConflictException(BaseErrorCode errorCode, String detail) {
-        super(detail);
-        this.errorCode = errorCode;
+public class ConflictException extends BaseException {
+    protected ConflictException(BaseErrorCode errorCode, String message) {
+        super(errorCode, message);
     }
 
-    public ConflictException(BaseErrorCode errorCode, String detail, Throwable cause) {
-        super(detail, cause);
-        this.errorCode = errorCode;
+    protected ConflictException(BaseErrorCode errorCode, String message, Throwable cause) {
+        super(errorCode, message, cause);
     }
 }
