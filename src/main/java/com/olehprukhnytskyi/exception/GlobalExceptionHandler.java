@@ -3,9 +3,8 @@ package com.olehprukhnytskyi.exception;
 import com.olehprukhnytskyi.dto.ProblemDetails;
 import com.olehprukhnytskyi.exception.error.BaseErrorCode;
 import com.olehprukhnytskyi.exception.error.CommonErrorCode;
-import io.micrometer.tracing.TraceContext;
-import io.micrometer.tracing.Tracer;
-import io.micrometer.tracing.Span;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.context.Context;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +26,6 @@ import java.util.Optional;
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
-    private final Tracer tracer;
-
     @ExceptionHandler({
             MissingServletRequestParameterException.class,
             MethodArgumentTypeMismatchException.class,
@@ -38,10 +35,11 @@ public class GlobalExceptionHandler {
             BindException.class
     })
     public ResponseEntity<ProblemDetails> handleValidationExceptions(Exception ex) {
-        String traceId = Optional.ofNullable(tracer.currentSpan())
-                .map(Span::context)
-                .map(TraceContext::traceId)
-                .orElse("N/A");
+        Context currentContext = Context.current();
+        Span activeSpan = Span.fromContext(currentContext);
+        String traceId = activeSpan.getSpanContext().isValid()
+                ? activeSpan.getSpanContext().getTraceId()
+                : "N/A";
 
         BaseErrorCode errorCode = CommonErrorCode.VALIDATION_ERROR;
         ProblemDetails.ProblemDetailsBuilder builder = ProblemDetails.builder()
@@ -94,10 +92,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<ProblemDetails> handleBaseException(BaseException ex) {
-        String traceId = Optional.ofNullable(tracer.currentSpan())
-                .map(Span::context)
-                .map(TraceContext::traceId)
-                .orElse("N/A");
+        Context currentContext = Context.current();
+        Span activeSpan = Span.fromContext(currentContext);
+        String traceId = activeSpan.getSpanContext().isValid()
+                ? activeSpan.getSpanContext().getTraceId()
+                : "N/A";
         BaseErrorCode code = ex.getErrorCode();
         ProblemDetails body = ProblemDetails.builder()
                 .title(code.getTitle())
@@ -112,10 +111,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ProblemDetails> handleGenericException(Exception ex) {
         log.error("Unhandled exception occurred:", ex);
-        String traceId = Optional.ofNullable(tracer.currentSpan())
-                .map(Span::context)
-                .map(TraceContext::traceId)
-                .orElse("N/A");
+        Context currentContext = Context.current();
+        Span activeSpan = Span.fromContext(currentContext);
+        String traceId = activeSpan.getSpanContext().isValid()
+                ? activeSpan.getSpanContext().getTraceId()
+                : "N/A";
         BaseErrorCode errorCode = CommonErrorCode.INTERNAL_ERROR;
         ProblemDetails problemDetails = ProblemDetails.builder()
                 .title(errorCode.getTitle())
