@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
                 .title(errorCode.getTitle())
                 .status(errorCode.getStatus())
                 .code(errorCode.getCode())
-                .traceId(MDC.get("traceId"));
+                .traceId(MDC.get("trace_id"));
 
         if (ex instanceof MissingServletRequestParameterException e) {
             builder.detail("Missing required query parameter");
@@ -87,7 +87,7 @@ public class GlobalExceptionHandler {
                 .status(code.getStatus())
                 .code(code.getCode())
                 .detail(ex.getMessage())
-                .traceId(MDC.get("traceId"))
+                .traceId(MDC.get("trace_id"))
                 .build();
         return ResponseEntity.status(code.getStatus()).body(body);
     }
@@ -100,7 +100,7 @@ public class GlobalExceptionHandler {
                 .title(errorCode.getTitle())
                 .status(errorCode.getStatus())
                 .detail("An unexpected error occurred")
-                .traceId(MDC.get("traceId"))
+                .traceId(MDC.get("trace_id"))
                 .code(errorCode.getCode())
                 .build();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
